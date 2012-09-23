@@ -130,13 +130,13 @@ namespace download_files
             lock (locker)
             {
                 download_file current = (download_file)sender;
-                int p = (int)(Math.Round((double)e.bytes * 100 / (current.ContentBytes == 0 ? e.bytes : current.ContentBytes)));
+                double p = Math.Round((double)e.bytes * 1000 / (current.ContentBytes == 0 ? e.bytes : current.ContentBytes)) / 10;
                 Console.SetCursorPosition(0, current.ConsoleLine);
                 if (p > 0) Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(
-                    string.Format("{0,5}{3,3}{1,4}% {4,8} {5,8}   {2,-30}",
+                    string.Format("{0,5}{3,3} {1,6}% {4,8} {5,8}   {2,-30}",
                         getIcon(current.Status),
-                        p,
+                        p.ToString("F1"),
                         e.name,
                         current.IndexThread,
                         ContentSizeToStr(e.speed),

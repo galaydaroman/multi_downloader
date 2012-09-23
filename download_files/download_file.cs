@@ -182,22 +182,25 @@ namespace download_files
                 file_stream.SetLength(0);
             }
 
-            Func<int, long> mb = (bytes) => { return (int)Math.Floor((double)bytes / (1024 * 1024)); };
-            long _count;
-            long pos = file_stream.Position;
-            byte[] buffer = new byte[256 * 1024];
-            if (pos != 0) stream.Seek(pos, SeekOrigin.Begin);
-            long startTime = DateTime.Now.Ticks;
+            int _count;
             long bytesPerTime = 0;
+            
+            long pos = file_stream.Position;
+            byte[] buffer = new byte[512 * 1024];            
+            long startTime = DateTime.Now.Ticks;
+            if (pos != 0) stream.Seek(pos, SeekOrigin.Begin);
 
             while ((_count = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
                 file_stream.Write(buffer, 0, _count);
                 pos += _count;
                 bytesPerTime += _count;
-                if (mb(pos) > mb(pos - _count))
+                var seconds = TimeSpan.FromTicks(DateTime.Now.Ticks - startTime).TotalSeconds;
+                if (seconds > 0.35)
                 {
-                    double speed = bytesPerTime / (TimeSpan.FromTicks(DateTime.Now.Ticks - startTime).TotalSeconds);
+                    double speed = (double)bytesPerTime / seconds;
+                    bytesPerTime = 0;
+                    startTime = DateTime.Now.Ticks;
                     if (currentAsyncResult.IsCompleted)
                     {
                         DownloadProgress.EndInvoke(currentAsyncResult);
