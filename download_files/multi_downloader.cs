@@ -106,7 +106,7 @@ namespace download_files
 			{
                 Console.SetCursorPosition(0, downloader.Max(x => x.ConsoleLine) + 2);
                 Console.ResetColor();
-                Console.WriteLine(" -------------------------");
+                Console.WriteLine(" -------------------------\n");
 
                 if (ErrorList != null)
                 {

@@ -122,8 +122,9 @@
 ====================</value>
   </data>
   <data name="help_text" xml:space="preserve">
-    <value>Usage: txt_file, [dest_dir]
+    <value>Usage: txt_file [dest_dir] [threads]
   txt_file - its a text file with list of direct links
-  dest_dir - [optional] destination directory or current if not set</value>
+  dest_dir - [optional] destination directory or current if not set
+  threads - [optional] set threads count</value>
   </data>
 </root>

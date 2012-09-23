@@ -30,25 +30,30 @@ namespace download_files
         private int thread_count = -1;
         private AutoResetEvent threadResetEvent;
         private long startTime;
+        private bool validArguments;
+        private bool started = false;
 
 
         // ============================
 
         public cmd_model(string[] args)
         {
-            loadAndCheckArguments(args);
+            validArguments = loadAndCheckArguments(args);
             threadResetEvent = new AutoResetEvent(false);
         }
 
         public void start()
         {
+            if (!validArguments) return;
             startTime = DateTime.Now.Ticks;
             md = new multi_downloader(file_list, dest_dir, threadResetEvent, thread_count);
             md.process();
+            started = true;
         }
 
         public void endWait()
         {
+            if (!started) return;
             threadResetEvent.WaitOne();
             md.free();
 
@@ -60,13 +65,14 @@ namespace download_files
                 time.Minutes.ToString().PadLeft(2, '0'), 
                 time.Seconds.ToString().PadLeft(2, '0'));
             Console.ResetColor();
-            Console.WriteLine("\n Done\n Time: {0}\n Content size: {1}\n Avarage speed: {2}", 
+            Console.WriteLine("\n\n Done\n Time: {0}\n Content size: {1}\n Avarage speed: {2}", 
                 time_str, multi_downloader.ContentSizeToStr(content_size), multi_downloader.ContentSizeToStr(speed));
             Console.CursorVisible = true;
         }
 
         private bool loadAndCheckArguments(string[] args)
         {
+            print_about();
             if (args == null || args.Length == 0)
             {
                 print_help();
@@ -111,6 +117,7 @@ namespace download_files
 
         public void print_about()
         {
+            Console.WriteLine();
             print_text(Resource.about_text);
         }
 

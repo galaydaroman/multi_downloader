@@ -4,6 +4,7 @@
     <StartArguments>c:\Users\Galayda\Downloads\fsua_56089.txt</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <StartArguments>c:\Users\Roma\Downloads\10248576.urls c:\Temp\345 1</StartArguments>
+    <StartArguments>
+    </StartArguments>
   </PropertyGroup>
 </Project>
