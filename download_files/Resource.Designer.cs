@@ -71,10 +71,19 @@ namespace download_files {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Usage: txt_file [dest_dir] [threads]
+        ///   Ищет локализованную строку, похожую на Usage cmd: 
+        ///
+        ///      download_files.exe  txt_file  [dest_path] [&lt;options&gt;]
+        ///
+        ///--- params
+        ///
         ///  txt_file - its a text file with list of direct links
-        ///  dest_dir - [optional] destination directory or current if not set
-        ///  threads - [optional] set threads count.
+        ///  dest_path - [optional] destination directory (default: current path)
+        ///
+        ///--- options
+        ///
+        ///  -threads, [-t]  =&gt; set threads count (default: 3)
+        ///  -interface, [-i]  =&gt; use GUI for parameters .
         /// </summary>
         internal static string help_text {
             get {

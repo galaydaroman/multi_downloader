@@ -27,11 +27,11 @@ namespace download_files
         }
 
         private multi_downloader md;
-        private int thread_count = -1;
         private AutoResetEvent threadResetEvent;
         private long startTime;
         private bool validArguments;
         private bool started = false;
+        private Dictionary<string, object> flags;
 
 
         // ============================
@@ -46,7 +46,7 @@ namespace download_files
         {
             if (!validArguments) return;
             startTime = DateTime.Now.Ticks;
-            md = new multi_downloader(file_list, dest_dir, threadResetEvent, thread_count);
+            md = new multi_downloader(file_list, dest_dir, threadResetEvent, (int)(flags["threads"]));
             md.process();
             started = true;
         }
@@ -79,33 +79,93 @@ namespace download_files
                 return false;
             }
 
-            file_with_list = args[0];
-            if (!File.Exists(file_with_list))
+            // Parsing Arguments
+            file_with_list = null;
+            dest_dir = null;
+            flags = new Dictionary<string, object>();
+            string[] empty_flags = new string[] { "i", "interface" };
+
+            foreach (var arg in args)
+            {
+                var last = flags.LastOrDefault();
+                if (flags.Count > 0 && last.Value == null && !empty_flags.Any(x => x == last.Key))
+                {
+                    flags[last.Key] = arg;
+                    continue;
+                }
+
+                // Flag
+                if (arg.StartsWith("-"))
+                {
+                    flags[arg.Substring(1).ToLower()] = null;
+                }
+                else
+                {
+                    if (file_with_list == null) file_with_list = arg;
+                    else if (dest_dir == null) dest_dir = arg;
+                }
+            }
+
+            //Process flags
+            for (var i = 0; i < flags.Count; i++)
+            {
+                var flag = flags.ElementAt(i);
+                switch (flag.Key)
+                {
+                    case "threads":
+                    case "t":
+                        int c;
+                        flags["threads"] = int.TryParse(flag.Value.ToString(), out c) ? c : -1;
+                        break;
+                    case "interface":
+                    case "i":
+                        //without value
+                        flags["interface"] = null;
+                        break;
+                }
+            }
+
+            //Interface call
+            if (flags.ContainsKey("interface"))
+            {
+                var result = ParamsForm.OpenDialog();
+
+                if (result != null)
+                {
+                    file_with_list = null;
+                    file_list = result.Links.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
+                    dest_dir = result.DestinationFolder;
+                    flags["threads"] = result.ThreadCount;
+                }
+                else if (file_with_list == null)
+                {
+                    print_help();
+                    return false;
+                }
+            }
+
+            //Check file list and load links
+            if (file_list == null && !File.Exists(file_with_list))
             {
                 print_text(string.Format("Error: File \"{0}\" doesn't exists.", file_with_list));
                 return false;
             }
-            file_list = File.ReadAllLines(file_with_list).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
-
-            if (args.Length >= 2)
+            else if (file_list == null)
             {
-                dest_dir = args[1];
-                try
-                {
-                    if (!Directory.Exists(dest_dir)) Directory.CreateDirectory(dest_dir);
-                }
-                catch
-                {
-                    dest_dir = ".";
-                }
-                dest_dir = Path.GetFullPath(dest_dir);
+                file_list = File.ReadAllLines(file_with_list).Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();
             }
+            
 
-            if (args.Length >= 3)
+            //Output parameter
+            try
             {
-                int c = 0;
-                thread_count = int.TryParse(args[2], out c) ? c : -1;
+                if (!Directory.Exists(dest_dir)) Directory.CreateDirectory(dest_dir);
             }
+            catch
+            {
+                dest_dir = ".";
+            }
+            dest_dir = Path.GetFullPath(dest_dir);
 
             return true;
         }

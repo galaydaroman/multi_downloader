@@ -117,23 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="about_text" xml:space="preserve">
-    <value>Downloading files by direct link
-====================</value>
-  </data>
-  <data name="help_text" xml:space="preserve">
-    <value>Usage cmd: 
-
-      download_files.exe  txt_file  [dest_path] [&lt;options&gt;]
-
---- params
-
-  txt_file - its a text file with list of direct links
-  dest_path - [optional] destination directory (default: current path)
-
---- options
-
-  -threads, [-t]  =&gt; set threads count (default: 3)
-  -interface, [-i]  =&gt; use GUI for parameters </value>
-  </data>
+  <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>157, 17</value>
+  </metadata>
 </root>

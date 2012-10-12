@@ -14,7 +14,6 @@ namespace download_files
         private static object locker_df = new object();
         private Uri uri;
         private string url;
-        private string response_url;
         private DownloadFileStatus status;
         private Exception error;
         private long contentBytes = 0;

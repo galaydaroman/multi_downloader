@@ -8,6 +8,7 @@ namespace download_files
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
             cmd_model model = new cmd_model(args);
